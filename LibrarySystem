@@ -1,0 +1,88 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Book {
+private:
+    string title;
+    string author;
+    string isbn;
+    bool available;
+
+public:
+    Book() : title(""), author(""), isbn(""), available(true) {}
+
+    void setBookDetails(string t, string a, string i) {
+        title = t;
+        author = a;
+        isbn = i;
+        available = true;
+    }
+
+    void displayBookDetails() const {
+        cout << "Title: " << title << "\nAuthor: " << author
+             << "\nISBN: " << isbn
+             << "\nAvailability: " << (available ? "Available" : "Borrowed") << endl;
+    }
+
+    bool borrowBook() {
+        if (available) {
+            available = false;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    void returnBook() {
+        available = true;
+    }
+
+    string getISBN() const { return isbn; }
+
+    bool isAvailable() const { return available; }
+};
+
+int main() {
+    const int librarySize = 5;
+    Book library[librarySize];
+
+    library[0].setBookDetails("1984", "George Orwell", "1111");
+    library[1].setBookDetails("To Kill a Mockingbird", "Harper Lee", "2222");
+    library[2].setBookDetails("The Great Gatsby", "F. Scott Fitzgerald", "3333");
+    library[3].setBookDetails("Moby Dick", "Herman Melville", "4444");
+    library[4].setBookDetails("Pride and Prejudice", "Jane Austen", "5555");
+
+    string inputISBN;
+
+    while (true) {
+        cout << "\nEnter the ISBN of the book you want to borrow (or 0 to exit): ";
+        cin >> inputISBN;
+
+        if (inputISBN == "0") {
+            cout << "Exiting the system. Goodbye!\n";
+            break;
+        }
+
+        bool found = false;
+        for (int i = 0; i < librarySize; i++) {
+            if (library[i].getISBN() == inputISBN) {
+                found = true;
+                if (library[i].isAvailable()) {
+                    library[i].borrowBook();
+                    cout << "You have successfully borrowed the book:\n";
+                    library[i].displayBookDetails();
+                } else {
+                    cout << "Sorry, the book is already borrowed.\n";
+                }
+                break;
+            }
+        }
+
+        if (!found) {
+            cout << "Book with ISBN " << inputISBN << " not found in the library.\n";
+        }
+    }
+
+    return 0;
+}
